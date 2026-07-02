@@ -3,537 +3,771 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Философия — Тест 1 уровня</title>
+<title>Тест: Python / ML / PyTorch</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+  :root{
+    --bg:#0f1117;
+    --card:#171a23;
+    --card-border:#262b38;
+    --accent:#7c9eff;
+    --accent2:#59d9a4;
+    --text:#e9ecf5;
+    --muted:#8b91a7;
+    --danger:#ff6b6b;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: radial-gradient(1200px 800px at 10% -10%, #1b2030 0%, var(--bg) 60%);
+    color:var(--text);
+    min-height:100vh;
+    padding: 32px 16px 80px;
+  }
+  .wrap{max-width:760px; margin:0 auto;}
+  header{margin-bottom:24px;}
+  h1{font-size:1.6rem; margin:0 0 6px;}
+  .sub{color:var(--muted); font-size:0.95rem;}
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --bg: #0f0f1a;
-    --card: #1a1a2e;
-    --card2: #16213e;
-    --accent: #7c3aed;
-    --accent2: #a855f7;
-    --correct: #10b981;
-    --wrong: #ef4444;
-    --text: #e2e8f0;
-    --muted: #94a3b8;
-    --border: #2d2d4e;
+  .progress-outer{
+    background:var(--card-border);
+    border-radius:999px;
+    height:8px;
+    margin:20px 0 28px;
+    overflow:hidden;
+  }
+  .progress-inner{
+    height:100%;
+    width:0%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transition: width .3s ease;
   }
 
-  body {
-    font-family: 'Inter', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
+  .section-title{
+    margin:36px 0 14px;
+    font-size:1.05rem;
+    color:var(--accent2);
+    letter-spacing:.02em;
+    text-transform:uppercase;
+    font-weight:600;
+    border-bottom:1px solid var(--card-border);
+    padding-bottom:8px;
   }
 
-  .screen { display: none; width: 100%; max-width: 760px; }
-  .screen.active { display: block; }
-
-  /* ── WELCOME ── */
-  #welcome {
-    text-align: center;
-    background: linear-gradient(135deg, var(--card) 0%, var(--card2) 100%);
-    border: 1px solid var(--border);
-    border-radius: 24px;
-    padding: 60px 40px;
-    box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+  .card{
+    background:var(--card);
+    border:1px solid var(--card-border);
+    border-radius:var(--radius);
+    padding:20px 20px 16px;
+    margin-bottom:16px;
   }
-  .logo { font-size: 64px; margin-bottom: 20px; }
-  #welcome h1 { font-size: 2.2rem; font-weight: 700; margin-bottom: 10px; background: linear-gradient(135deg, #a855f7, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-  #welcome .subtitle { color: var(--muted); font-size: 1rem; margin-bottom: 40px; line-height: 1.6; }
-  .stats-row { display: flex; justify-content: center; gap: 30px; margin-bottom: 40px; flex-wrap: wrap; }
-  .stat-box { background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.3); border-radius: 14px; padding: 16px 28px; }
-  .stat-box .num { font-size: 2rem; font-weight: 700; color: var(--accent2); }
-  .stat-box .lbl { font-size: 0.8rem; color: var(--muted); margin-top: 4px; }
-  .btn-start {
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    color: #fff; border: none; border-radius: 14px;
-    padding: 16px 48px; font-size: 1.1rem; font-weight: 600;
-    cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
-    box-shadow: 0 8px 25px rgba(124,58,237,0.4);
+  .q-title{font-weight:600; margin-bottom:14px; line-height:1.4;}
+  .q-num{color:var(--accent); margin-right:6px;}
+
+  label.opt{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    padding:10px 12px;
+    border-radius:10px;
+    margin-bottom:8px;
+    cursor:pointer;
+    border:1px solid transparent;
+    transition: background .15s, border-color .15s;
   }
-  .btn-start:hover { transform: translateY(-2px); box-shadow: 0 12px 35px rgba(124,58,237,0.55); }
+  label.opt:hover{background:#1e2230;}
+  label.opt input{margin-top:3px;}
+  label.opt.selected{background:#1c2436; border-color:var(--accent);}
 
-  /* ── QUIZ ── */
-  #quiz { }
-  .top-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; gap: 12px; }
-  .q-counter { font-size: 0.85rem; color: var(--muted); white-space: nowrap; }
-  .progress-wrap { flex: 1; background: var(--border); border-radius: 99px; height: 8px; }
-  .progress-bar { height: 8px; border-radius: 99px; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width 0.4s ease; }
-  .score-badge { background: rgba(124,58,237,0.2); border: 1px solid rgba(124,58,237,0.4); border-radius: 99px; padding: 4px 14px; font-size: 0.82rem; color: var(--accent2); white-space: nowrap; }
-
-  .q-card {
-    background: linear-gradient(135deg, var(--card) 0%, var(--card2) 100%);
-    border: 1px solid var(--border); border-radius: 20px; padding: 36px;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.4);
-    animation: fadeIn 0.3s ease;
+  pre.code-block{
+    background:#0c0e14;
+    border:1px solid var(--card-border);
+    border-radius:10px;
+    padding:14px 16px;
+    overflow-x:auto;
+    font-size:0.88rem;
+    color:#d3d8ea;
+    margin:0 0 14px;
   }
-  @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
-  .q-num { font-size: 0.8rem; color: var(--accent2); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
-  .q-text { font-size: 1.15rem; font-weight: 500; line-height: 1.6; margin-bottom: 28px; }
 
-  .options { display: flex; flex-direction: column; gap: 12px; }
-  .option {
-    background: rgba(255,255,255,0.04); border: 1.5px solid var(--border);
-    border-radius: 12px; padding: 16px 20px;
-    cursor: pointer; font-size: 0.95rem; line-height: 1.5;
-    transition: all 0.18s ease; display: flex; align-items: center; gap: 14px;
+  textarea.practice-input{
+    width:100%;
+    min-height:70px;
+    background:#0c0e14;
+    border:1px solid var(--card-border);
+    border-radius:10px;
+    color:var(--text);
+    padding:10px 12px;
+    font-family:inherit;
+    font-size:0.92rem;
+    resize:vertical;
+    margin-bottom:10px;
   }
-  .option:hover:not(.disabled) { border-color: var(--accent2); background: rgba(124,58,237,0.1); transform: translateX(4px); }
-  .option .opt-letter {
-    width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--border);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 0.8rem; font-weight: 700; flex-shrink: 0;
-    color: var(--muted); background: rgba(255,255,255,0.04);
-    transition: all 0.18s;
+  textarea.practice-input:focus{outline:1px solid var(--accent);}
+  textarea.practice-input:disabled{opacity:.7;}
+
+  .practice-feedback{
+    display:none;
+    margin-top:12px;
+    padding:12px 14px;
+    border-radius:10px;
+    font-size:0.92rem;
+    line-height:1.5;
   }
-  .option:hover:not(.disabled) .opt-letter { border-color: var(--accent2); color: var(--accent2); }
-  .option.correct { border-color: var(--correct); background: rgba(16,185,129,0.12); }
-  .option.correct .opt-letter { border-color: var(--correct); background: var(--correct); color: #fff; }
-  .option.wrong { border-color: var(--wrong); background: rgba(239,68,68,0.1); }
-  .option.wrong .opt-letter { border-color: var(--wrong); background: var(--wrong); color: #fff; }
-  .option.disabled { cursor: default; }
-
-  .feedback {
-    margin-top: 20px; padding: 14px 18px; border-radius: 12px;
-    font-size: 0.9rem; font-weight: 500; display: none; align-items: center; gap: 10px;
+  .practice-feedback.correct{background:#12261e; border:1px solid #234436; color:#a9f0cf;}
+  .practice-feedback.incorrect{background:#2a1519; border:1px solid #4a2028; color:#ffb3b3;}
+  .practice-feedback code{
+    background:rgba(0,0,0,.25);
+    padding:2px 6px;
+    border-radius:6px;
   }
-  .feedback.show { display: flex; animation: fadeIn 0.2s; }
-  .feedback.ok { background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.3); color: #34d399; }
-  .feedback.err { background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.3); color: #f87171; }
+  .practice-feedback .ref-answer{margin-top:8px; color:var(--muted); font-size:0.85rem;}
+  .practice-feedback .ref-answer b{color:var(--text);}
 
-  .btn-next {
-    margin-top: 24px; width: 100%;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    color: #fff; border: none; border-radius: 12px;
-    padding: 15px; font-size: 1rem; font-weight: 600;
-    cursor: pointer; display: none; transition: transform 0.2s, box-shadow 0.2s;
-    box-shadow: 0 6px 20px rgba(124,58,237,0.4);
+  .check-btn, .reveal-btn, .submit-btn, .restart-btn, .start-btn{
+    background: linear-gradient(90deg, var(--accent), #6f8bf0);
+    color:#0b0d13;
+    border:none;
+    font-weight:700;
+    padding:10px 18px;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:0.9rem;
+    transition: transform .15s ease, opacity .15s ease;
   }
-  .btn-next.show { display: block; animation: fadeIn 0.2s; }
-  .btn-next:hover { transform: translateY(-1px); box-shadow: 0 10px 28px rgba(124,58,237,0.5); }
+  .check-btn:hover, .submit-btn:hover, .restart-btn:hover, .start-btn:hover{transform: translateY(-1px);}
+  .check-btn:disabled{opacity:.5; cursor:not-allowed; transform:none;}
 
-  /* ── RESULT ── */
-  #result {
-    text-align: center;
-    background: linear-gradient(135deg, var(--card) 0%, var(--card2) 100%);
-    border: 1px solid var(--border); border-radius: 24px;
-    padding: 60px 40px; box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+  .submit-row{
+    position:sticky;
+    bottom:16px;
+    display:flex;
+    justify-content:center;
+    margin-top:28px;
   }
-  .result-emoji { font-size: 72px; margin-bottom: 16px; }
-  #result h2 { font-size: 1.9rem; font-weight: 700; margin-bottom: 10px; }
-  .result-sub { color: var(--muted); margin-bottom: 36px; font-size: 0.95rem; }
-  .circle-wrap { margin: 0 auto 36px; position: relative; width: 160px; height: 160px; }
-  .circle-wrap svg { transform: rotate(-90deg); }
-  .circle-bg { fill: none; stroke: var(--border); stroke-width: 10; }
-  .circle-fg { fill: none; stroke-width: 10; stroke-linecap: round; transition: stroke-dashoffset 1s ease; }
-  .circle-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; }
-  .circle-text .pct { font-size: 2rem; font-weight: 700; }
-  .circle-text .pct-lbl { font-size: 0.75rem; color: var(--muted); }
-
-  .result-stats { display: flex; justify-content: center; gap: 20px; margin-bottom: 36px; flex-wrap: wrap; }
-  .rs-box { background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 14px; padding: 16px 24px; min-width: 100px; }
-  .rs-box .rv { font-size: 1.6rem; font-weight: 700; }
-  .rs-box .rl { font-size: 0.75rem; color: var(--muted); margin-top: 4px; }
-  .rs-box.green .rv { color: var(--correct); }
-  .rs-box.red .rv { color: var(--wrong); }
-
-  .grade-badge { display: inline-block; padding: 10px 28px; border-radius: 99px; font-weight: 700; font-size: 1rem; margin-bottom: 36px; }
-  .grade-A { background: rgba(16,185,129,0.2); border: 1px solid rgba(16,185,129,0.4); color: #34d399; }
-  .grade-B { background: rgba(59,130,246,0.2); border: 1px solid rgba(59,130,246,0.4); color: #60a5fa; }
-  .grade-C { background: rgba(234,179,8,0.2); border: 1px solid rgba(234,179,8,0.4); color: #fbbf24; }
-  .grade-D { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.35); color: #f87171; }
-
-  .btns-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-  .btn-retry {
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    color: #fff; border: none; border-radius: 12px;
-    padding: 14px 36px; font-size: 0.95rem; font-weight: 600;
-    cursor: pointer; box-shadow: 0 6px 20px rgba(124,58,237,0.4);
-    transition: transform 0.2s;
+  .submit-btn{
+    padding:14px 38px;
+    font-size:1rem;
+    box-shadow: 0 8px 24px rgba(124,158,255,.35);
   }
-  .btn-retry:hover { transform: translateY(-2px); }
-  .btn-home {
-    background: rgba(255,255,255,0.06); border: 1px solid var(--border);
-    color: var(--text); border-radius: 12px;
-    padding: 14px 36px; font-size: 0.95rem; font-weight: 600;
-    cursor: pointer; transition: background 0.2s;
-  }
-  .btn-home:hover { background: rgba(255,255,255,0.1); }
+  .submit-btn:disabled{opacity:.5; cursor:not-allowed; box-shadow:none;}
 
-  @media (max-width: 500px) {
-    #welcome, #result { padding: 40px 24px; }
-    .q-card { padding: 24px; }
-    #welcome h1 { font-size: 1.7rem; }
-    .q-text { font-size: 1rem; }
+  .warning{
+    color:var(--danger);
+    font-size:0.85rem;
+    text-align:center;
+    margin-top:10px;
+    display:none;
+  }
+
+  /* Start screen */
+  #start-screen{
+    max-width:480px;
+    margin: 10vh auto 0;
+    text-align:center;
+  }
+  #start-screen .card{text-align:left;}
+  #start-screen input[type=text]{
+    width:100%;
+    padding:12px 14px;
+    border-radius:10px;
+    border:1px solid var(--card-border);
+    background:#0c0e14;
+    color:var(--text);
+    font-size:1rem;
+    margin:14px 0 18px;
+  }
+  #start-screen input[type=text]:focus{outline:1px solid var(--accent);}
+  .start-btn{width:100%; padding:13px; font-size:1rem;}
+  .name-warning{color:var(--danger); font-size:0.85rem; display:none; margin-bottom:10px;}
+
+  /* Results */
+  #results{display:none;}
+  .result-hero{
+    text-align:center;
+    padding:30px 20px 24px;
+    background: var(--card);
+    border:1px solid var(--card-border);
+    border-radius:var(--radius);
+    margin-bottom:20px;
+  }
+  .result-hero .big-level{
+    font-size:3.2rem;
+    font-weight:800;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    line-height:1.1;
+  }
+  .result-hero .score-line{color:var(--muted); margin-top:8px;}
+  .send-status{font-size:0.8rem; color:var(--muted); margin-top:10px;}
+
+  .section-results{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:12px;
+    margin-bottom:24px;
+  }
+  @media (max-width:520px){ .section-results{grid-template-columns:1fr;} }
+  .section-result-card{
+    background:var(--card);
+    border:1px solid var(--card-border);
+    border-radius:12px;
+    padding:14px 16px;
+  }
+  .section-result-card .name{font-size:0.85rem; color:var(--muted); margin-bottom:4px;}
+  .section-result-card .lvl{font-size:1.4rem; font-weight:700;}
+  .lvl.L1{color:var(--danger);}
+  .lvl.L2{color:#f0c454;}
+  .lvl.L3{color:var(--accent2);}
+
+  .review-item{
+    background:var(--card);
+    border:1px solid var(--card-border);
+    border-radius:12px;
+    padding:14px 16px;
+    margin-bottom:10px;
+    font-size:0.9rem;
+  }
+  .review-item .rq{font-weight:600; margin-bottom:6px;}
+  .review-item.correct{border-left:4px solid var(--accent2);}
+  .review-item.incorrect{border-left:4px solid var(--danger);}
+  .review-item .ans-line{color:var(--muted); margin-top:2px;}
+  .review-item .ans-line b{color:var(--text);}
+
+  #quiz-area.hidden{display:none;}
+  .loading-overlay{
+    position:fixed; inset:0; background:rgba(15,17,23,.85);
+    display:none; align-items:center; justify-content:center;
+    color:var(--muted); font-size:0.95rem; z-index:50;
   }
 </style>
 </head>
 <body>
+<div class="wrap">
 
-<!-- WELCOME -->
-<div id="welcome" class="screen active">
-  <div class="logo">🧠</div>
-  <h1>Философия</h1>
-  <p class="subtitle">Тренажёр для подготовки к тесту<br>1 уровень · Базовый курс</p>
-  <div class="stats-row">
-    <div class="stat-box"><div class="num" id="totalQ">—</div><div class="lbl">вопросов</div></div>
-    <div class="stat-box"><div class="num">4</div><div class="lbl">варианта</div></div>
-    <div class="stat-box"><div class="num">∞</div><div class="lbl">попыток</div></div>
-  </div>
-  <button class="btn-start" onclick="startQuiz()">Начать тест →</button>
-</div>
-
-<!-- QUIZ -->
-<div id="quiz" class="screen">
-  <div class="top-bar">
-    <span class="q-counter" id="qCounter">1 / 150</span>
-    <div class="progress-wrap"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
-    <span class="score-badge" id="scoreBadge">✓ 0</span>
-  </div>
-  <div class="q-card">
-    <div class="q-num" id="qNum">Вопрос 1</div>
-    <div class="q-text" id="qText">...</div>
-    <div class="options" id="optionsWrap"></div>
-    <div class="feedback" id="feedback"></div>
-    <button class="btn-next" id="btnNext" onclick="nextQuestion()">Следующий вопрос →</button>
-  </div>
-</div>
-
-<!-- RESULT -->
-<div id="result" class="screen">
-  <div class="result-emoji" id="resultEmoji">🎉</div>
-  <h2 id="resultTitle">Результат</h2>
-  <p class="result-sub" id="resultSub"></p>
-  <div class="circle-wrap">
-    <svg width="160" height="160" viewBox="0 0 160 160">
-      <circle class="circle-bg" cx="80" cy="80" r="70"/>
-      <circle class="circle-fg" id="circleFg" cx="80" cy="80" r="70" stroke="#7c3aed"
-        stroke-dasharray="439.82"
-        stroke-dashoffset="439.82"/>
-    </svg>
-    <div class="circle-text">
-      <div class="pct" id="pctText">0%</div>
-      <div class="pct-lbl">верных</div>
+  <div id="start-screen">
+    <header>
+      <h1>Тест: Python / pandas / ML basics / PyTorch</h1>
+      <div class="sub">20 вопросов с выбором ответа + мини-практика. Введите имя, чтобы начать.</div>
+    </header>
+    <div class="card">
+      <label for="studentName" style="font-weight:600;">Ваше имя</label>
+      <input type="text" id="studentName" placeholder="Например, Иван Иванов" autocomplete="off">
+      <div class="name-warning" id="nameWarning">Пожалуйста, введите имя, чтобы начать тест.</div>
+      <button class="start-btn" id="startBtn">Начать тест</button>
     </div>
   </div>
-  <div class="result-stats">
-    <div class="rs-box green"><div class="rv" id="rsCorrect">0</div><div class="rl">Правильно</div></div>
-    <div class="rs-box red"><div class="rv" id="rsWrong">0</div><div class="rl">Неверно</div></div>
-    <div class="rs-box"><div class="rv" id="rsTotal">0</div><div class="rl">Всего</div></div>
+
+  <div id="quiz-area" class="hidden">
+    <header>
+      <h1>Тест: Python / pandas / ML basics / PyTorch</h1>
+      <div class="sub">20 вопросов с выбором ответа + мини-практика. Внизу — итоговый уровень L1 / L2 / L3.</div>
+    </header>
+
+    <div class="progress-outer"><div class="progress-inner" id="progressBar"></div></div>
+
+    <div id="questions-container"></div>
+
+    <div class="section-title">Мини-практика</div>
+    <div class="sub" style="margin-bottom:12px;">Впишите свой ответ и нажмите «Проверить» — правильный ответ откроется после проверки. Баллы за практику не начисляются.</div>
+    <div id="practice-container"></div>
+
+    <div class="submit-row">
+      <button class="submit-btn" id="submitBtn">Показать результат</button>
+    </div>
+    <div class="warning" id="warningText">Отвечено не на все вопросы. Всё равно посчитать результат по отвеченным?</div>
   </div>
-  <div class="grade-badge" id="gradeBadge"></div>
-  <div class="btns-row">
-    <button class="btn-retry" onclick="startQuiz()">Пройти заново</button>
-    <button class="btn-home" onclick="goHome()">На главную</button>
+
+  <div id="results">
+    <div class="result-hero">
+      <div class="score-line">Общий результат</div>
+      <div class="big-level" id="overallLevel">L2</div>
+      <div class="score-line" id="scoreLine">70 из 100 баллов</div>
+      <div class="send-status" id="sendStatus"></div>
+    </div>
+
+    <div class="section-title">По разделам</div>
+    <div class="section-results" id="sectionResults"></div>
+
+    <div class="section-title">Разбор ответов</div>
+    <div id="reviewContainer"></div>
+
+    <div class="submit-row">
+      <button class="restart-btn" id="restartBtn">Пройти заново</button>
+    </div>
   </div>
+
 </div>
 
+<div class="loading-overlay" id="loadingOverlay">Проверяем ответы…</div>
+
 <script>
-const ALL_QUESTIONS = [
-  { q: "Слово «философия» в переводе с греческого означает любовь к…", a: "мудрости", w: ["власти", "истине", "знанию"] },
-  { q: "Слово «философия» первым использовал для обозначения своих занятий древнегреческий мыслитель", a: "Пифагор", w: ["Фалес", "Анаксимен", "Аристотель"] },
-  { q: "Принцип философствования Сократа", a: "Я знаю, что ничего не знаю", w: ["Всё течёт.", "Все есть число", "Человек есть мера всех вещей"] },
-  { q: "Философия опирается на…", a: "мышление", w: ["мистику", "эмоции", "веру"] },
-  { q: "Философия как особый вид духовной деятельности ориентирована на…", a: "поиск истины", w: ["отказ от сомнений", "оправдание веры", "получение власти"] },
-  { q: "Особенность, отличающая постановку философских проблем", a: "личностный характер", w: ["стремление к известности", "мистическая интуиция", "отрицание разума"] },
-  { q: "Форма умственной деятельности человека, направленная на осмысление своих действий, культуры и её оснований", a: "рефлексия", w: ["рассудок", "воображение", "ощущение"] },
-  { q: "Эвристические возможности философии определяются", a: "творчески-критическим отношением к миру", w: ["запоминанием готового знания", "отказом от самостоятельного мышления", "признанием бессмысленности мира"] },
-  { q: "С культурой мышления связана", a: "логика", w: ["мистика", "магия", "догматика"] },
-  { q: "Культура мышления помогает преодолеть недостатки стихийного мышления. Какое мышление она также помогает преодолеть?", a: "стереотипного мышления", w: ["творческого мышления", "критического мышления", "когнитивного мышления"] },
-  { q: "Важный элемент развитой культуры мышления", a: "критическое мышление", w: ["стихийное мышление", "стереотипное мышление", "ситуативное мышление"] },
-  { q: "Принцип философской рефлексии древнегреческого мудреца Сократа", a: "«Познай самого себя»", w: ["«Бытие есть, небытия нет»", "«Живи незаметно»", "«Все течет»"] },
-  { q: "Эвристические возможности философии проявляются в…", a: "разработке новых идей и методов", w: ["критическом отношении к творчеству", "отказе от рациональных доказательств", "опоре только на повседневный опыт"] },
-  { q: "Важный элемент философского мышления, способствующий появлению инновационных решений", a: "сомнение", w: ["абсолютизация", "гармония", "хаотичность"] },
-  { q: "Согласно Аристотелю, именно это состояние побуждает людей философствовать", a: "удивление", w: ["возмущение", "равнодушие", "гнев"] },
-  { q: "Согласно Ф. Энгельсу основной вопрос философии – это вопрос об отношении", a: "мышления к бытию", w: ["объекта к субъекту", "культуры к природе", "творчества к разуму"] },
-  { q: "Философия как способ продуктивного творческого мышления связана с…", a: "эвристикой", w: ["топонимикой", "метрологией", "термодинамикой"] },
-  { q: "Отличительная характеристика философии как мировоззрения", a: "рациональность", w: ["хаотичность", "иллюзорность", "сверхъестественность"] },
-  { q: "Одна из основных функций философии", a: "мировоззренческая", w: ["символическая", "фактологическая", "мистическая"] },
-  { q: "Функция философии, которая связана с выработкой универсальных способов и приемов теоретической и практической деятельности человека", a: "методологическая", w: ["воспитательная", "компенсаторная", "аксиологическая"] },
-  { q: "Исторически первый тип мировоззрения", a: "Мифология", w: ["Антропософия", "Религия", "Философия"] },
-  { q: "К основным разделам философского знания относится", a: "Онтология", w: ["Теология", "Палеонтология", "Лингвистика"] },
-  { q: "Раздел философского знания, связанный с размышлениями о человеке", a: "Антропология", w: ["Эпистемология", "Онтология", "Гносеология"] },
-  { q: "Раздел философского знания, связанный с размышлениями о познании", a: "Гносеология", w: ["Онтология", "Этика", "Антропология"] },
-  { q: "Раздел философского знания, связанный с размышлениями о бытии", a: "Онтология", w: ["Антропология", "Гносеология", "Аксиология"] },
-  { q: "Раздел философского знания, связанный с размышлениями о ценностях", a: "Аксиология", w: ["Гносеология", "Онтология", "Антропология"] },
-  { q: "Раздел философского знания, связанный с размышлениями о морали и нравственности", a: "Этика", w: ["Онтология", "Герменевтика", "Эстетика"] },
-  { q: "Раздел философского знания, связанный с размышлениями о прекрасном и возвышенном", a: "Эстетика", w: ["Герменевтика", "Софистика", "Антропология"] },
-  { q: "Методологическая функция философии связана с разработкой…", a: "рациональных способов деятельности человека", w: ["военной стратегии и тактики", "чувственных методов политической борьбы", "принципов экономической деятельности"] },
-  { q: "К числу основных вопросов, которыми занимается философия, немецкий мыслитель И. Кант относил", a: "Что я могу знать?", w: ["Быть или не быть?", "Из чего все произошло?", "Что есть природа?"] },
-  { q: "Мировоззренческая функция философии", a: "Связана с наиболее общими вопросами бытия и познания", w: ["Определяет ранние формы религии", "Связана с повседневной деятельностью", "Указывает на вторичность сознания"] },
-  { q: "Специфика философского размышления о мире определяется", a: "Размышлением над фундаментальными вопросами существования мира и человека", w: ["Бессознательным восприятием реальности", "Верой в сверхъестественные силы", "Эмоционально-чувственным отношением человека к своему социальному статусу"] },
-  { q: "Гносеологическая функция философии связана с…", a: "установлением возможностей человеческого познания", w: ["поисками социальной гармонии", "выработкой целостной теории человека", "утверждением приоритета идеального"] },
-  { q: "Исторический тип мировоззрения, связанный с верой в сверхъестественное", a: "религия", w: ["философия", "диалектика", "наука"] },
-  { q: "Специфическая черта философского знания", a: "рациональность", w: ["антропоморфизм", "догматизм", "тотемизм"] },
-  { q: "Философию можно рассматривать как", a: "универсальное знание", w: ["священное знание", "эзотерическое знание", "частную науку"] },
-  { q: "Ответы на философские вопросы ищут в…", a: "доводах и умозаключениях разума", w: ["мистическом озарении", "повседневном опыте", "откровении"] },
-  { q: "Религию, миф и философию объединяет", a: "постановка мировоззренческих вопросов", w: ["рефлексия", "агностицизм", "рационализм"] },
-  { q: "Раздел философского знания", a: "гносеология", w: ["политология", "фразеология", "социология"] },
-  { q: "Элемент структуры мировоззрения", a: "Миропредставление", w: ["Мироутверждение", "Мировопрошание", "Мироприсутствие"] },
-  { q: "Определение «Целостная система объективных и систематизированных знаний об общих свойствах и закономерностях существования мира» относится к…", a: "Научной картине мира", w: ["Мифологической картине мира", "Религиозной картине мира", "Теологической картине мира"] },
-  { q: "Философское направление, в котором сознание интерпретируется как свойство высокоорганизованной материи мозга", a: "материализм", w: ["агностицизм", "дуализм", "идеализм"] },
-  { q: "Понятие философии, обозначающее индивидуальное духовное начало в человеке", a: "душа", w: ["атом", "монада", "энтелехия"] },
-  { q: "Античный философ, считавший душу человека бессмертной идеей", a: "Платон", w: ["Фалес", "Гераклит", "Демокрит"] },
-  { q: "Великий арабский философ, известный в Западной Европе под именем Авиценна", a: "Ибн Сина", w: ["Аль Кинди", "Аль Газали", "Ибн Рушд"] },
-  { q: "Понятие философии, обозначающее идеальную правящую миром силу, к которой человек может быть причастен", a: "Дух", w: ["Космос", "Пространство", "Рассудок"] },
-  { q: "Античный философ, автор трактата «О душе»", a: "Аристотель", w: ["Анаксагор", "Эмпедокл", "Демокрит"] },
-  { q: "Французский философ, автор утверждения: «Мыслю, следовательно, существую»", a: "Декарт", w: ["Бэкон", "Лейбниц", "Спиноза"] },
-  { q: "Функцию упорядочивания, систематизации, структурирования получаемых данных в мышлении выполняет", a: "Рассудок", w: ["Фантазия", "Воображение", "Ощущение"] },
-  { q: "Немецкий философ, утверждавший, что «всякое наше знание начинается с чувств, переходит затем к рассудку и заканчивается в разуме»", a: "Кант", w: ["Вольтер", "Франклин", "Монтень"] },
-  { q: "Австрийский психиатр и психолог, основоположник и ведущий теоретик психоанализа", a: "З. Фрейд", w: ["Т. Адорно", "К.Г. Юнг", "Г. Маркузе"] },
-  { q: "Философ, отстаивающий тезис о тождестве бытия и мышления", a: "Гегель", w: ["Платон", "Сократ", "Шопенгауэр"] },
-  { q: "Представитель философии психоанализа в западной философии ХХ века", a: "Э. Фромм", w: ["Г. Лейбниц", "Ф. Бэкон", "Р. Декарт"] },
-  { q: "Центральное понятие философии психоанализа", a: "Бессознательное", w: ["Язык", "Научная революция", "Диалектика"] },
-  { q: "Произведение З. Фрейда, в котором рассматриваются проблемы бессознательного, сознания, сверхсознания", a: "«Я и Оно»", w: ["«Бытие и время»", "«Страх и трепет»", "«Иметь или быть»"] },
-  { q: "Автор учения о «коллективном бессознательном»", a: "К.Г. Юнг", w: ["Э. Гуссерль", "Ж.П. Сартр", "Ф. Ницше"] },
-  { q: "Основное понятие психоанализа К.Г. Юнга", a: "архетип", w: ["либидо", "интенциональность", "верификация"] },
-  { q: "Проблема сознания в философии неразрывно связана с проблемой", a: "Языка", w: ["Религии", "Искусства", "Истории"] },
-  { q: "«Лингвистический поворот» в философии ХХ века связан с развитием такого направления как", a: "Герменевтика", w: ["Неокантианство", "Марксизм", "Психоанализ"] },
-  { q: "Философ, чьё творчество имеет отношение к «лингвистическому повороту» в философии ХХ века", a: "Л. Витгенштейн", w: ["Ф. Энгельс", "С. Кьеркегор", "И. Лакатос"] },
-  { q: "В античной философии тезис: душа не есть тело, но и не может существовать без тела – отстаивал…", a: "Аристотель", w: ["Пифагор", "Плотин", "Демокрит"] },
-  { q: "Французский философ Р. Декарт связывал понимание души с…", a: "мышлением", w: ["пространством", "материей", "религией"] },
-  { q: "Французский философ XVII века, утверждавший существование «врождённых идей»", a: "Декарт", w: ["Дидро", "Гоббс", "Вольтер"] },
-  { q: "Тип мыслительной деятельности, ограниченный в своих познавательных возможностях чувственно данным материалом", a: "рассудок", w: ["ощущение", "абстрагирование", "разум"] },
-  { q: "Тип мыслительной деятельности, связанный со стремлением к выходу за пределы чувственного опыта", a: "разум", w: ["наблюдение", "созерцание", "рассудок"] },
-  { q: "«Трансцендентальность» — понятие, связанное со способностями", a: "разума", w: ["рассудка", "психики", "восприятия"] },
-  { q: "Философ ХХ века, чьё творчество связано с исследованием проблемы языка", a: "Л. Витгенштейн", w: ["З. Фрейд", "А. Грамши", "О. Шпенглер"] },
-  { q: "Суть метафизики как философского учения", a: "признание вечных, неизменных, целостных начал мирового бытия", w: ["признание постоянной изменчивости мира", "использование эзотерических принципов для объяснения реальности", "утверждение зависимости бытия от познающего разума"] },
-  { q: "В философии Нового времени признавал существование множества субстанций-монад", a: "Лейбниц", w: ["Декарт", "Спиноза", "Гельвеций"] },
-  { q: "Понятие онтологии, обозначающее то, что существует самостоятельно, само по себе, нечто устойчивое и постоянное", a: "субстанция", w: ["апория", "необходимость", "качество"] },
-  { q: "Понимал бытие как единое, вечное, неделимое, совершенное и умопостигаемое", a: "Парменид", w: ["Гераклит", "Протагор", "Анаксагор"] },
-  { q: "Философ Зенон в своих апориях доказывал", a: "невозможность мыслить движение", w: ["существование атомов", "постоянную изменчивость бытия", "бесполезность метафизики"] },
-  { q: "Утверждал, что истинное бытие – это мир вечных, совершенных идей", a: "Платон", w: ["Демокрит", "Горгий", "Геродот"] },
-  { q: "О том, что бытие постигается посредством категорий, учил", a: "Аристотель", w: ["Пифагор", "Фалес", "Гесиод"] },
-  { q: "Признавал существование множества субстанций – монад", a: "Лейбниц", w: ["Декарт", "Спиноза", "Беркли"] },
-  { q: "Философ, признававший существование двух субстанций – мыслящей и протяжённой", a: "Декарт", w: ["Лейбниц", "Спиноза", "Беркли"] },
-  { q: "Учение Б. Спинозы о том, что одну единую субстанцию образует полное совпадение Бога и природы", a: "пантеизм", w: ["теоцентризм", "креационизм", "деизм"] },
-  { q: "Доказательства того, что «бытие есть, а небытия нет» предлагал в своих «апориях» древнегреческий философ", a: "Зенон", w: ["Эмпедокл", "Анаксимен", "Гераклит"] },
-  { q: "Онтология – раздел философии, связанный с изучением", a: "Бытия", w: ["Науки", "Ценностей", "Познания"] },
-  { q: "Древнегреческий философ, утверждавший, что истинным бытием обладает только «мир идей»", a: "Платон", w: ["Сократ", "Парменид", "Демокрит"] },
-  { q: "Категория классической онтологии, обозначающая первоначало, «то, что лежит в основе»", a: "Субстанция", w: ["Общество", "Природа", "Идея"] },
-  { q: "Проблему бытия и небытия в античной философии рассматривал", a: "Парменид", w: ["Демокрит", "Пиррон", "Сократ"] },
-  { q: "Философское учение о закономерностях становления, развития бытия и познания и основанный на этом учении метод творчески познающего мышления", a: "Диалектика", w: ["Дидактика", "Лингвистика", "Софистика"] },
-  { q: "Закон диалектики", a: "Единства и борьбы противоположностей", w: ["Исключённого третьего", "Случайного становления", "Абсолютного покоя"] },
-  { q: "Диалектика отрицания отрицания проявляется в следующих процессах", a: "Замена каменных орудий труда бронзовыми орудиями", w: ["Уничтожение вредных микроорганизмов", "Исчезновение древних языков", "Разрушение горных пород"] },
-  { q: "Категории диалектики, раскрывающие внутреннюю и внешнюю характеристику предмета", a: "Сущность и Явление", w: ["Причина и Следствие", "Необходимость и Случайность", "Бытие и Небытие"] },
-  { q: "Диалектика определяет в качестве источника развития", a: "Существование противоположных сил", w: ["Механическую силу", "Социальную гармонию", "Мировой разум"] },
-  { q: "Категория, выражающая диалектическую взаимосвязь качества и количества", a: "мера", w: ["сущность", "форма", "явление"] },
-  { q: "Субстанция есть причина самой себя, поэтому субстанция одна – так полагал в философии Нового времени", a: "Спиноза", w: ["Декарт", "Юм", "Локк"] },
-  { q: "Античный философ Платон", a: "Создал учение об идеях (эйдосах)", w: ["Создал учение о «материи» и «форме»", "Написал труд «Метафизика»", "Основал школу под названием «Ликей»"] },
-  { q: "Античный философ Аристотель", a: "Создал учение о «материи» и «форме»", w: ["Написал труд «Государство»", "Основал школу под названием «Академия»", "Написал труд «Утешение философией»"] },
-  { q: "Вечную подвижность и изменчивость мира в философии Гераклита символизирует такое вещественное первоначало как", a: "Огонь", w: ["Земля", "Воздух", "Вода"] },
-  { q: "О том, что существуют только «атомы и пустота» учил древнегреческий философ", a: "Демокрит", w: ["Парменид", "Сократ", "Фалес"] },
-  { q: "Движение в философском понимании", a: "Способ существования материи", w: ["Результат механического отражения", "Физический процесс", "Иллюзия сознания"] },
-  { q: "Философская категория для обозначения длительности протекания всех механических, органических и психических процессов", a: "Время", w: ["Субстанция", "Казуальность", "Пространство"] },
-  { q: "Форма движения в обществе", a: "Социальная революция", w: ["Движение элементарных частиц", "Магнитное поле", "Саморегуляция в биоценозах"] },
-  { q: "Потенциальное и актуальное существование предмета выражаются категориями", a: "возможность и действительность", w: ["причина и следствие", "часть и целое", "форма и содержание"] },
-  { q: "Определение категории «материя» связано с её признанием в качестве", a: "объективной реальности", w: ["совокупности общественных явлений", "идей и идеалов человека", "атомов и элементарных частиц"] },
-  { q: "К теоретическому уровню общественного сознания относятся", a: "Научные трактаты", w: ["Массовые слухи", "Хорошие привычки", "Приметы погоды"] },
-  { q: "Проблему бытия в философии ХХ века анализировал", a: "М. Хайдеггер", w: ["Б. Рассел", "К. Поппер", "З. Фрейд"] },
-  { q: "Онтологическое свойство пространства", a: "Протяжённость", w: ["Длительность", "Системность", "Самоорганизация"] },
-  { q: "Онтологическое свойство времени", a: "Длительность", w: ["Трёхмерность", "Протяжённость", "Системность"] },
-  { q: "Проблема субстанции в философии Нового времени рассматривается в трудах", a: "Р. Декарта", w: ["Н. Макиавелли", "Ф. Петрарки", "Дж. Вико"] },
-  { q: "Проблема бытия связана с этим разделом философии", a: "Метафизика", w: ["Эстетика", "Философия истории", "Эпистемология"] },
-  { q: "Фундаментальный труд М. Хайдеггера в области онтологии", a: "«Бытие и время»", w: ["«Этика»", "«Критика чистого разума»", "«Воля к власти»"] },
-  { q: "Категории диалектики", a: "Форма и содержание", w: ["Неопределённость и определённость", "Хаос и порядок", "Темное и светлое"] },
-  { q: "В своей теории познания сомнения в возможности достижения полного и достоверного знания выражал", a: "Д. Юм", w: ["Г. Лейбниц", "Ф. Бэкон", "Р. Декарт"] },
-  { q: "Основоположник философии эмпиризма в Новое время", a: "Бэкон", w: ["Монтескье", "Спиноза", "Декарт"] },
-  { q: "Классификация наук Аристотеля включала в себя науки теоретические, практические и…", a: "поэтические", w: ["физические", "математические", "технические"] },
-  { q: "Научное знание характеризует", a: "Проверяемость", w: ["Абсолютность", "Случайность", "Субъективность"] },
-  { q: "Уровень научного познания, связанный с получением фактов", a: "Эмпирический", w: ["Обыденный", "Художественный", "Метафизический"] },
-  { q: "Одно из наиболее известных произведений немецкого философа И. Канта", a: "«Критика чистого разума»", w: ["«Капитал»", "«Я и Оно»", "«Так говорил Заратустра»"] },
-  { q: "Уровень научного познания, в котором решающую роль играют наблюдение, опыт, эксперимент", a: "эмпирический", w: ["интуитивный", "фальсификационный", "теоретический"] },
-  { q: "Направление философии, подвергающее сомнению возможность получения объективного достоверного знания", a: "скептицизм", w: ["диалектика", "фатализм", "детерминизм"] },
-  { q: "Метод индукции в теории познания Ф. Бэкона связан с этим направлением философии", a: "эмпиризм", w: ["метафизика", "аксиология", "структурализм"] },
-  { q: "Метод дедукции в теории познания Р. Декарта связан с этим направлением философии", a: "рационализм", w: ["метафизика", "аксиология", "антропология"] },
-  { q: "Понятие философии И. Канта, указывающее на ограниченность наших знаний о сущности объектов", a: "«вещь в себе»", w: ["«монада»", "«субстанция»", "«бессознательное»"] },
-  { q: "Понятие философии И. Канта, указывающее на ограниченность возможностей разума в познании мира", a: "«антиномии»", w: ["«атомы»", "«идеи»", "«категории»"] },
-  { q: "Для эмпирического уровня научного познания характерно", a: "Проведение экспериментов", w: ["Написание учебников", "Чтение лекций", "Разработка теории"] },
-  { q: "Направление в философии, к которому относится принцип – истина есть то, что «лучше работает на нас»", a: "Прагматизм", w: ["Позитивизм", "Неотомизм", "Персонализм"] },
-  { q: "Предмет гносеологии", a: "Природа познания", w: ["Небытие вселенной", "Природа социума", "Социальная мобильность"] },
-  { q: "Способность человеческого мышления, осуществляющая упорядочивающую, систематизирующую функцию", a: "Рассудок", w: ["Интуиция", "Рефлексия", "Фантазия"] },
-  { q: "Способность мышления, позволяющая человеку в процессе познания выходить за пределы наличного опыта", a: "Разум", w: ["Эксперимент", "Бессознательное", "Инстинкт"] },
-  { q: "Метод теоретического исследования, заключающийся в отвлечении сознания от чувственно воспринимаемых свойств объекта", a: "Абстрагирование", w: ["Наблюдение", "Описание", "Измерение"] },
-  { q: "Способ научного познания мира, связанный с созданием специальных условий для изучения свойств объекта", a: "Эксперимент", w: ["Теорема", "Аксиома", "Абстрагирование"] },
-  { q: "Апостериорное знание в философии И. Канта – это знание…", a: "послеопытное", w: ["обыденное", "конкретное", "доопытное"] },
-  { q: "Основное утверждение эмпиризма", a: "Главенствующую роль в познании играет опыт", w: ["Источник познания находится в сфере бессознательного", "Решающая роль в познании принадлежит разуму", "Мир в принципе непознаваем"] },
-  { q: "В теории познания чувственно-наглядный образ, свободно сохраняемый в памяти и воспроизводимый в сознании", a: "представление", w: ["суждение", "ощущение", "восприятие"] },
-  { q: "В классификации наук Аристотеля науки делятся на теоретические, практические и…", a: "поэтические", w: ["фундаментальные", "математические", "физические"] },
-  { q: "Философская позиция, выражающая сомнение в возможностях достижения объективной истины", a: "Скептицизм", w: ["Идеализм", "Мистицизм", "Материализм"] },
-  { q: "Метод эмпирического уровня научного познания", a: "Наблюдение", w: ["Дедукция", "Формализация", "Абстрагирование"] },
-  { q: "Характеристика научного знания", a: "Объективность", w: ["Художественность", "Субъективность", "Хаотичность"] },
-  { q: "Разделение «наук о природе» и «наук о духе» появляется в философии", a: "Неокантианства", w: ["Неогегельянства", "Неопозитивизма", "Нигилизма"] },
-  { q: "Английский философ начала XVII века, предложивший свою классификацию наук", a: "Френсис Бэкон", w: ["Джон Уиклиф", "Томас Мор", "Джон Локк"] },
-  { q: "Фальсифицируемость как критерий отделения научной теории от ненаучной ввел", a: "К. Поппер", w: ["Г. Уэллс", "О. Конт", "И. Лакатос"] },
-  { q: "Автор концепции «эпистемологического анархизма» в науке", a: "П. Фейерабенд", w: ["Б. Рассел", "Т. Кун", "К. Поппер"] },
-  { q: "Понятие, предлагаемое В.И. Вернадским для определения процесса взаимодействия природы и общества на основе разума и науки", a: "Ноосфера", w: ["Социосфера", "Антропосфера", "Биосфера"] },
-  { q: "Основоположник философии позитивизма", a: "О. Конт", w: ["Т. Гоббс", "Т. Кун", "Ф. Бэкон"] },
-  { q: "Сциентизм – это…", a: "концепция, абсолютизирующая роль науки в жизни общества", w: ["стремление индивида к приобретению научных знаний", "утверждение преимущества математики перед другими науками", "скептическое отношение к возможностям науки и техники"] },
-  { q: "Характерная особенность чувственного познания", a: "Непосредственность", w: ["Абстрактность", "Обобщённость", "Теоретичность"] },
-  { q: "Гносеология — это учение о…", a: "познании", w: ["бытии", "ценностях", "прекрасном"] },
-  { q: "Знание, предшествующее опыту и существующее независимо от него, называется", a: "априорным", w: ["диалектическим", "апостериорным", "метафизическим"] },
-  { q: "Форма научного знания, требующая дальнейшего обоснования и проверки", a: "гипотеза", w: ["аксиома", "теория", "факт"] },
-  { q: "Индукция как метод научного исследования", a: "Переход от частного знания к общему", w: ["Переход от общего знания к частному", "Переход от теории к практике", "Мысленное расчленение объекта на части"] },
-  { q: "Дедукция как метод научного познания", a: "Переход от общего знания к частному", w: ["Мысленное расчленение объекта на части", "Переход от частного знания к общему", "Отказ от теории в пользу практики"] },
-  { q: "К формам рационального познания относится", a: "Понятие", w: ["Воображение", "Ощущение", "Представление"] },
-  { q: "К формам чувственного познания относится", a: "Восприятие", w: ["Воображение", "Умозаключение", "Суждение"] },
-  { q: "Концепция «бессубъектной эпистемологии» К. Поппера связана с этим разделом философии", a: "теория познания", w: ["диалектика", "эстетика", "философия истории"] },
-  { q: "Труд Б. Спинозы, в котором используется «геометрический метод»", a: "«Этика»", w: ["«Трактат об усовершенствовании разума»", "«Государь»", "«Монадология»"] },
-  { q: "Основная проблема философской антропологии", a: "Сущность человека", w: ["Бытие атомов", "Пространство микромира", "Биотехнологии"] },
-  { q: "Определение человека как образа и подобия Бога характерно для философии", a: "Фомы Аквинского", w: ["Ж. Ламетри", "Марка Аврелия", "К. Маркса"] },
+const FORMCARRY_URL = "https://formcarry.com/s/Tfa_8icCx9g";
+/* TODO: Зачем ты копаешься в моем коде если можно просто сдать тест? */
+
+const SALT = "x7Qz2r9F";
+
+async function sha256Hex(text){
+  const enc = new TextEncoder().encode(text);
+  const buf = await crypto.subtle.digest("SHA-256", enc);
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+const sections = [
+  {
+    id: "python",
+    name: "Python / pandas / matplotlib",
+    questions: [
+      { q: "Что делает df.groupby(\"channel\")[\"revenue\"].mean()?",
+        opts: ["Сортирует датафрейм по каналу","Считает среднюю выручку по каждому каналу","Удаляет пропуски","Объединяет таблицы"],
+        correctHash: "e2da4ebab512dbda544074338246a7ae73669d6dd973e67691c220cf33e46ca" },
+      { q: "Что вернёт df.isna().sum()?",
+        opts: ["Количество уникальных значений","Сумму всех чисел","Количество пропусков по столбцам","Размер датафрейма"],
+        correctHash: "86b78fb3852d39e05db8bcd2740343580051867a069578575e4afe3257d3a6" },
+      { q: "Зачем нужен merge в pandas?",
+        opts: ["Для визуализации","Для объединения таблиц","Для сортировки","Для удаления строк"],
+        correctHash: "8671c66f13cde347b7e3aad5affb2f364aaf7955c431908035b2d31aecceb0" },
+      { q: "Что делает np.clip(x, 0, 1)?",
+        opts: ["Умножает на 1","Обрезает значения в диапазон от 0 до 1","Считает среднее","Строит график"],
+        correctHash: "bd85c092c0b7bbf49fdae449f1dd1b34e1303a91d9a9051d0a0720e8cf61d8a" },
+      { q: "Что лучше показывает распределение числового признака?",
+        opts: ["bar chart","histogram","pie chart","scatter только по категориям"],
+        correctHash: "82d9af71769df62b550fda6a1f755141641a67ed689e28a9d95f76db1e27c63" },
+    ]
+  },
+  {
+    id: "ml",
+    name: "ML basics",
+    questions: [
+      { q: "Чем supervised learning отличается от unsupervised?",
+        opts: ["В supervised нет данных","В supervised есть labels / target","В unsupervised всегда есть labels","Это одно и то же"],
+        correctHash: "42fa936d240bae3899e8c63eadac7a1db3fb75a072643c5ae8ff564bb90f5c0" },
+      { q: "Что из этого — пример supervised задачи?",
+        opts: ["KMeans","PCA","NER","Clustering"],
+        correctHash: "f6d60d8dd10328988f989d8803a27f43b62a3406b58fe64a278391e5381102e" },
+      { q: "Что из этого ближе к unsupervised?",
+        opts: ["Классификация спама","Кластеризация пользователей","Предсказание churn","NER"],
+        correctHash: "3311f090f3489c43f8308677281b43753cfd9374e55ea77a668fd2e0093d396" },
+      { q: "Зачем нужен validation set?",
+        opts: ["Чтобы обучить модель дважды","Чтобы оценить качество на неиспользованных данных","Чтобы увеличить размер train","Чтобы убрать признаки"],
+        correctHash: "69597ab2599001412b7af11b96d8ee0dabaf58b3d736849cce9070ba7cd32b8" },
+      { q: "Что такое loss?",
+        opts: ["Количество строк","Ошибка модели","Количество классов","Скорость обучения"],
+        correctHash: "2dd62bf2f8fad4bdd728f03b2df3e14f4db46e9d7f82c50651842b993dbb0f2" },
+    ]
+  },
+  {
+    id: "pytorch",
+    name: "PyTorch",
+    questions: [
+      { q: "Что такое Tensor?",
+        opts: ["Случайное число","Числовой массив, удобный для ML","Таблица только для pandas","Метрика качества"],
+        correctHash: "409c12e45063b5e8a48069d509ae1bb784c093d78d4d8b02a9246f09183ef22" },
+      { q: "Что делает nn.Linear(in_features, out_features)?",
+        opts: ["Сортирует данные","Делает линейное преобразование","Считает loss","Обнуляет градиенты"],
+        correctHash: "4e85acc3671416f18917df3aa2c20aaa3695c5024bcc0ee43275671761e43a8" },
+      { q: "Зачем нужен nn.Module?",
+        opts: ["Чтобы хранить данные в CSV","Чтобы оформить модель как класс","Чтобы строить графики","Чтобы считать среднее"],
+        correctHash: "80e071a858d51b43facaa2e3c72d7dcccf11015883877936fbb4c5d0fdae6e7" },
+      { q: "Что делает forward()?",
+        opts: ["Обучает модель","Описывает путь данных через модель","Считает accuracy","Загружает датасет"],
+        correctHash: "8d91e71624a0e2b90ec42cbd558b270638a2430ae5a3f6ab07d87fa0844d4ef" },
+      { q: "Что из этого — правильный минимальный training loop?",
+        opts: ["forward -> step -> loss -> backward","zero_grad -> forward -> loss -> backward -> step","loss -> dataset -> optimizer -> tensor","tensor -> cuda -> pandas -> fit"],
+        correctHash: "1e58c41ff1d8a269e8bb5a224d55a3a9779e19d234dc9d99ee6faefc7d57f1c" },
+    ]
+  },
+  {
+    id: "applied",
+    name: "Applied thinking",
+    questions: [
+      { q: "Почему ReLU часто используют в нейросетях?",
+        opts: ["Она делает сеть линейной","Она добавляет нелинейность","Она убирает все веса","Она заменяет loss"],
+        correctHash: "bb0d4815ab2bfa55b4d0bab9582b5ec1acf96ede9df697f92a2f57ed0b2bafc" },
+      { q: "Зачем нужен bias?",
+        opts: ["Чтобы упростить DataFrame","Чтобы сдвигать результат и делать модель гибче","Чтобы увеличить размер батча","Чтобы посчитать F1"],
+        correctHash: "8aed9a3513a182b61e8103c208566427a05fd7a8a61b33190b40f621e423167" },
+      { q: "Почему одна линейная модель не решает XOR?",
+        opts: ["Потому что данных мало","Потому что XOR нелинейная задача","Потому что слишком много признаков","Потому что нет GPU"],
+        correctHash: "f9bd0a4cef5962356a36a094730bb4359296bcb9256a4995ed242e17dab97a9" },
+      { q: "Что полезнее сначала сделать в ML-проекте?",
+        opts: ["Сразу обучить большую модель","Понять данные, их типы и распределения","Сразу писать API","Сразу использовать Transformer"],
+        correctHash: "dfab5d71e2e22374249821a58f49c003b976979d1d3d42c99dafa990524047e" },
+      { q: "Почему monitoring важен в проде?",
+        opts: ["Чтобы графики были красивыми","Чтобы понимать, не деградирует ли модель","Чтобы увеличить размер batch","Чтобы убрать labels"],
+        correctHash: "269a0659588ed6271b753910163913784f81eaae59fb6f514c90c5704506a8" },
+    ]
+  }
 ];
 
-let questions = [];
-let current = 0;
-let score = 0;
-let answered = false;
+const P2_HASHES = [
+  "c75faa5f0e7f80c0c12f590d16327e2d4a21e9b51fe05bf11372cc67968b779",
+  "e621d87f6e15d5f379852de0c3b30fc9235f3aae267252ab0676bdd93e32c79",
+  "4780a8d94c942d400119a00753601841864413cc49387503550e99630e90b0",
+  "b4da5025da78f9e58acbfd9d06653c22d13db6709987932f687747bbac539b2"
+];
+const P3_HASHES = [
+  "67ecc44a3863a3061d954fc9f91d658f3fbf3e5c8232d4eda77cdb13a320fe9",
+  "72decdb99928fa07915b19b0603779dc2d5ad8af20f02913b7aa838c585d903"
+];
+const P1_HASHES = {
+  groupby: "4c54836931482b2d3897516fdc57e6ed4292f086133022d8273a04acfbe9be",
+  mean:    "08da345dab5df3acc089095d3e2513846729830a33969eeee0b80c548482a36",
+  bar:     "7a0582658bbe415cb702ca55c25aebd0c54d6836b38b64d2b174245e5fb8413",
+  plot:    "0df8e3100f906c0913a5180787a2c76332128535ae9a8f925745d138a4560b6"
+};
 
-function shuffle(arr) {
-  return arr.slice().sort(() => Math.random() - 0.5);
+const practice = [
+  {
+    title: "Практика 1",
+    prompt: "Дан датафрейм с колонками: channel, revenue, purchase_flag.\nЗадание: напишите код, который находит среднюю выручку по каждому каналу и строит bar plot.",
+    code: null,
+    check: async (v) => {
+      const tokens = v.toLowerCase().split(/[^a-z0-9_]+/).filter(Boolean);
+      const tokenHashes = new Set(await Promise.all(tokens.map(t => sha256Hex(`${SALT}:p1:${t}`))));
+      const hasGroupby = tokenHashes.has(P1_HASHES.groupby);
+      const hasMean = tokenHashes.has(P1_HASHES.mean);
+      const hasChart = tokenHashes.has(P1_HASHES.bar) || tokenHashes.has(P1_HASHES.plot);
+      return hasGroupby && hasMean && hasChart;
+    },
+    answer: "df.groupby(\"channel\")[\"revenue\"].mean().plot(kind=\"bar\")\n\nЛучший канал — тот, у которого среднее значение revenue выше остальных (см. результат groupby)."
+  },
+  {
+    title: "Практика 2",
+    prompt: "Дан кусок PyTorch-кода. Что выведет x.grad?",
+    code: "x = torch.tensor(2.0, requires_grad=True)\ny = x**2 + 4*x\ny.backward()\nprint(x.grad)",
+    check: async (v) => {
+      const norm = v.trim().toLowerCase().replace(/\s+/g, "");
+      const hash = await sha256Hex(`${SALT}:p2:${norm}`);
+      return P2_HASHES.includes(hash);
+    },
+    answer: "8.0 — потому что производная от x² + 4x равна 2x + 4, а при x = 2 это 8."
+  },
+  {
+    title: "Практика 3",
+    prompt: "В training loop пропущена строка. Что нужно вставить вместо ______?",
+    code: "optimizer.zero_grad()\ny_pred = model(x)\nloss = loss_fn(y_pred, y_true)\n______\noptimizer.step()",
+    check: async (v) => {
+      const norm = v.trim().toLowerCase().replace(/\s+/g, "");
+      const hash = await sha256Hex(`${SALT}:p3:${norm}`);
+      return P3_HASHES.includes(hash);
+    },
+    answer: "loss.backward()"
+  }
+];
+
+const POINTS_PER_Q = 5;
+const totalQuestions = sections.reduce((s, sec) => s + sec.questions.length, 0);
+const maxScore = totalQuestions * POINTS_PER_Q;
+
+let globalIndex = 0;
+const questionRefs = [];
+let studentName = "";
+
+let violationCount = 0;
+let cheatedCount = 0;
+let testStarted = false;
+
+document.addEventListener("visibilitychange", () => {
+  if (!testStarted) return;
+  if (document.hidden) {
+    violationCount++;
+  } else {
+    cheatedCount++;
+  }
+});
+
+document.getElementById("startBtn").addEventListener("click", startTest);
+document.getElementById("studentName").addEventListener("keydown", (e) => {
+  if (e.key === "Enter") startTest();
+});
+
+function startTest(){
+  const nameInput = document.getElementById("studentName");
+  const name = nameInput.value.trim();
+  const warn = document.getElementById("nameWarning");
+  if (!name) {
+    warn.style.display = "block";
+    nameInput.focus();
+    return;
+  }
+  warn.style.display = "none";
+  studentName = name;
+  testStarted = true;
+  document.getElementById("start-screen").style.display = "none";
+  document.getElementById("quiz-area").classList.remove("hidden");
+  window.scrollTo({ top: 0 });
 }
 
-function startQuiz() {
-  questions = shuffle(ALL_QUESTIONS);
-  current = 0;
-  score = 0;
-  answered = false;
-  document.getElementById('totalQ').textContent = questions.length;
-  showScreen('quiz');
-  renderQuestion();
+function renderQuestions(){
+  const container = document.getElementById("questions-container");
+  sections.forEach(sec => {
+    const secTitle = document.createElement("div");
+    secTitle.className = "section-title";
+    secTitle.textContent = sec.name;
+    container.appendChild(secTitle);
+
+    sec.questions.forEach((qObj) => {
+      globalIndex++;
+      const gIdx = globalIndex;
+      questionRefs.push({ sectionId: sec.id, correctHash: qObj.correctHash, qObj });
+
+      const card = document.createElement("div");
+      card.className = "card";
+      card.dataset.gidx = gIdx;
+
+      const title = document.createElement("div");
+      title.className = "q-title";
+      title.innerHTML = `<span class="q-num">${gIdx}.</span>${qObj.q}`;
+      card.appendChild(title);
+
+      qObj.opts.forEach((optText, oi) => {
+        const label = document.createElement("label");
+        label.className = "opt";
+        label.innerHTML = `
+          <input type="radio" name="q${gIdx}" value="${oi}">
+          <span>${optText}</span>
+        `;
+        label.addEventListener("click", () => {
+          card.querySelectorAll("label.opt").forEach(l => l.classList.remove("selected"));
+          label.classList.add("selected");
+          updateProgress();
+        });
+        card.appendChild(label);
+      });
+
+      container.appendChild(card);
+    });
+  });
 }
 
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+const practiceState = []; // { userAnswer, isCorrect, checked }
+
+function renderPractice(){
+  const container = document.getElementById("practice-container");
+  practice.forEach((p, idx) => {
+    practiceState.push({ userAnswer: "", isCorrect: null, checked: false });
+
+    const card = document.createElement("div");
+    card.className = "card";
+    let html = `<div class="q-title">${p.title}</div><div style="white-space:pre-line; color:var(--muted); margin-bottom:12px; font-size:0.92rem;">${p.prompt}</div>`;
+    if (p.code) {
+      html += `<pre class="code-block">${p.code.replace(/</g,"&lt;")}</pre>`;
+    }
+    html += `
+      <textarea class="practice-input" placeholder="Впишите ваш ответ здесь..."></textarea>
+      <button class="check-btn">Проверить</button>
+      <div class="practice-feedback"></div>
+    `;
+    card.innerHTML = html;
+
+    const textarea = card.querySelector(".practice-input");
+    const btn = card.querySelector(".check-btn");
+    const feedback = card.querySelector(".practice-feedback");
+
+    btn.addEventListener("click", async () => {
+      const val = textarea.value.trim();
+      if (!val) {
+        textarea.focus();
+        return;
+      }
+      btn.disabled = true;
+      btn.textContent = "Проверяем...";
+
+      const isCorrect = await p.check(val);
+      practiceState[idx] = { userAnswer: val, isCorrect, checked: true };
+
+      feedback.className = "practice-feedback " + (isCorrect ? "correct" : "incorrect");
+      feedback.innerHTML = `
+        <div>${isCorrect ? "✅ Верно!" : "❌ Не совсем."}</div>
+        <div class="ref-answer">Правильный ответ: <b>${p.answer.replace(/\n/g,"<br>")}</b></div>
+      `;
+      feedback.style.display = "block";
+
+      textarea.disabled = true;
+      btn.textContent = "Проверено";
+    });
+
+    container.appendChild(card);
+  });
 }
 
-function renderQuestion() {
-  const q = questions[current];
-  const total = questions.length;
-  const pct = Math.round((current / total) * 100);
+function updateProgress(){
+  const answered = document.querySelectorAll('#questions-container input[type=radio]:checked').length;
+  const pct = Math.round((answered / totalQuestions) * 100);
+  document.getElementById("progressBar").style.width = pct + "%";
+  return answered;
+}
 
-  document.getElementById('qCounter').textContent = `${current + 1} / ${total}`;
-  document.getElementById('progressBar').style.width = pct + '%';
-  document.getElementById('scoreBadge').textContent = `✓ ${score}`;
-  document.getElementById('qNum').textContent = `Вопрос ${current + 1}`;
-  document.getElementById('qText').textContent = q.q;
+function levelFor(score, max){
+  const pct = score / max;
+  if (pct >= 0.75) return "L3";
+  if (pct >= 0.40) return "L2";
+  return "L1";
+}
 
-  const opts = shuffle([q.a, ...q.w]);
-  const letters = ['А', 'Б', 'В', 'Г'];
-  const wrap = document.getElementById('optionsWrap');
-  wrap.innerHTML = '';
+async function computeResults(){
+  const sectionScores = {};
+  sections.forEach(sec => sectionScores[sec.id] = { score: 0, max: sec.questions.length * POINTS_PER_Q, name: sec.name });
 
-  opts.forEach((opt, i) => {
-    const div = document.createElement('div');
-    div.className = 'option';
-    div.innerHTML = `<span class="opt-letter">${letters[i]}</span><span>${opt}</span>`;
-    div.onclick = () => selectAnswer(div, opt, q.a);
-    wrap.appendChild(div);
+  let totalScore = 0;
+  const reviewData = [];
+
+  for (let i = 0; i < questionRefs.length; i++) {
+    const ref = questionRefs[i];
+    const gIdx = i + 1;
+    const checked = document.querySelector(`input[name="q${gIdx}"]:checked`);
+    const chosenIdx = checked ? parseInt(checked.value, 10) : null;
+
+    let isCorrect = false;
+    if (chosenIdx !== null) {
+      const chosenHash = await sha256Hex(`${SALT}:${gIdx}:${chosenIdx}`);
+      isCorrect = chosenHash === ref.correctHash;
+    }
+
+    // Находим текст правильного варианта, перебирая варианты и сверяя их хэш —
+    // так текст ответа не нужно хранить открытым до этого момента.
+    let correctIdx = null;
+    for (let oi = 0; oi < ref.qObj.opts.length; oi++) {
+      const candidateHash = await sha256Hex(`${SALT}:${gIdx}:${oi}`);
+      if (candidateHash === ref.correctHash) { correctIdx = oi; break; }
+    }
+
+    if (isCorrect) {
+      totalScore += POINTS_PER_Q;
+      sectionScores[ref.sectionId].score += POINTS_PER_Q;
+    }
+
+    reviewData.push({
+      num: gIdx,
+      q: ref.qObj.q,
+      opts: ref.qObj.opts,
+      correctIdx,
+      chosenIdx,
+      isCorrect
+    });
+  }
+
+  return { totalScore, sectionScores, reviewData };
+}
+
+function sendToFormCarry(payload){
+  const statusEl = document.getElementById("sendStatus");
+  if (FORMCARRY_URL.includes("YOUR_FORM_ID")) {
+    statusEl.textContent = "";
+    return;
+  }
+
+  const fd = new FormData();
+  Object.entries(payload).forEach(([key, value]) => {
+    fd.append(key, typeof value === "string" ? value : JSON.stringify(value));
   });
 
-  const fb = document.getElementById('feedback');
-  fb.className = 'feedback';
-  fb.textContent = '';
-
-  const btn = document.getElementById('btnNext');
-  btn.className = 'btn-next';
-  btn.textContent = current + 1 < questions.length ? 'Следующий вопрос →' : 'Показать результат →';
-  answered = false;
+  fetch(FORMCARRY_URL, {
+    method: "POST",
+    headers: { "Accept": "application/json" },
+    body: fd
+  })
+  .then(res => {
+    statusEl.textContent = res.ok ? "Результаты отправлены." : "";
+  })
+  .catch(() => {
+    statusEl.textContent = "";
+  });
 }
 
-function selectAnswer(el, chosen, correct) {
-  if (answered) return;
-  answered = true;
+/* ---------- Показ результатов ---------- */
+async function showResults(){
+  document.getElementById("loadingOverlay").style.display = "flex";
+  const { totalScore, sectionScores, reviewData } = await computeResults();
+  document.getElementById("loadingOverlay").style.display = "none";
 
-  const allOpts = document.querySelectorAll('.option');
-  allOpts.forEach(o => {
-    o.classList.add('disabled');
-    const txt = o.querySelector('span:last-child').textContent;
-    if (txt === correct) o.classList.add('correct');
+  document.getElementById("quiz-area").classList.add("hidden");
+  const results = document.getElementById("results");
+  results.style.display = "block";
+
+  const overallLevel = levelFor(totalScore, maxScore);
+  document.getElementById("overallLevel").textContent = overallLevel;
+  document.getElementById("scoreLine").textContent = `${totalScore} из ${maxScore} баллов`;
+
+  const secContainer = document.getElementById("sectionResults");
+  secContainer.innerHTML = "";
+  const sectionSummary = {};
+  Object.entries(sectionScores).forEach(([id, s]) => {
+    const lvl = levelFor(s.score, s.max);
+    sectionSummary[id] = { name: s.name, score: s.score, max: s.max, level: lvl };
+    const div = document.createElement("div");
+    div.className = "section-result-card";
+    div.innerHTML = `
+      <div class="name">${s.name}</div>
+      <div class="lvl ${lvl}">${lvl}</div>
+      <div class="name">${s.score} / ${s.max}</div>
+    `;
+    secContainer.appendChild(div);
   });
 
-  const fb = document.getElementById('feedback');
-  if (chosen === correct) {
-    score++;
-    el.classList.add('correct');
-    fb.className = 'feedback ok show';
-    fb.innerHTML = '✅ Верно!';
-  } else {
-    el.classList.add('wrong');
-    fb.className = 'feedback err show';
-    fb.innerHTML = `❌ Неверно. Правильный ответ: <strong>${correct}</strong>`;
+  const reviewContainer = document.getElementById("reviewContainer");
+  reviewContainer.innerHTML = "";
+  reviewData.forEach(r => {
+    const div = document.createElement("div");
+    div.className = "review-item " + (r.isCorrect ? "correct" : "incorrect");
+    const chosenText = r.chosenIdx !== null ? r.opts[r.chosenIdx] : "— не отвечено —";
+    const correctText = r.correctIdx !== null ? r.opts[r.correctIdx] : "—";
+    div.innerHTML = `
+      <div class="rq">${r.num}. ${r.q}</div>
+      <div class="ans-line">Ваш ответ: <b>${chosenText}</b></div>
+      ${!r.isCorrect ? `<div class="ans-line">Правильный ответ: <b>${correctText}</b></div>` : ""}
+    `;
+    reviewContainer.appendChild(div);
+  });
+
+  const payload = {
+    name: studentName,
+    score: `${totalScore} / ${maxScore}`,
+    overall_level: overallLevel,
+    section_summary: sectionSummary,
+    answers: reviewData.map(r => ({
+      num: r.num, correct: r.isCorrect,
+      chosen: r.chosenIdx !== null ? r.opts[r.chosenIdx] : null,
+      correct_answer: r.correctIdx !== null ? r.opts[r.correctIdx] : null
+    })),
+    practice_answers: practice.map((p, idx) => ({
+      title: p.title,
+      user_answer: practiceState[idx].userAnswer,
+      checked: practiceState[idx].checked,
+      correct: practiceState[idx].isCorrect
+    })),
+    tab_left_count: violationCount,
+    tab_return_count: cheatedCount
+  };
+  sendToFormCarry(payload);
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+document.getElementById("submitBtn").addEventListener("click", async () => {
+  const answered = updateProgress();
+  const warn = document.getElementById("warningText");
+  if (answered < totalQuestions) {
+    if (warn.style.display !== "block") {
+      warn.style.display = "block";
+      return;
+    }
   }
+  warn.style.display = "none";
+  await showResults();
+});
 
-  document.getElementById('scoreBadge').textContent = `✓ ${score}`;
-  document.getElementById('btnNext').classList.add('show');
-}
+document.getElementById("restartBtn").addEventListener("click", () => {
+  location.reload();
+});
 
-function nextQuestion() {
-  current++;
-  if (current >= questions.length) {
-    showResult();
-  } else {
-    renderQuestion();
-  }
-}
-
-function showResult() {
-  showScreen('result');
-  const total = questions.length;
-  const pct = Math.round((score / total) * 100);
-
-  document.getElementById('pctText').textContent = pct + '%';
-  document.getElementById('rsCorrect').textContent = score;
-  document.getElementById('rsWrong').textContent = total - score;
-  document.getElementById('rsTotal').textContent = total;
-
-  const circ = document.getElementById('circleFg');
-  const circumference = 2 * Math.PI * 70;
-  const offset = circumference - (pct / 100) * circumference;
-
-  let grade, emoji, title, sub, cls, color;
-  if (pct >= 90) {
-    grade = '🏆 Отлично'; emoji = '🎉'; title = 'Превосходный результат!';
-    sub = 'Вы отлично знаете материал.'; cls = 'grade-A'; color = '#10b981';
-  } else if (pct >= 75) {
-    grade = '👍 Хорошо'; emoji = '😊'; title = 'Хороший результат!';
-    sub = 'Повторите несколько тем для закрепления.'; cls = 'grade-B'; color = '#3b82f6';
-  } else if (pct >= 50) {
-    grade = '📖 Удовлетворительно'; emoji = '🤔'; title = 'Есть над чем работать';
-    sub = 'Рекомендуем повторить материал.'; cls = 'grade-C'; color = '#eab308';
-  } else {
-    grade = '❗ Нужно повторить'; emoji = '💪'; title = 'Не сдавайтесь!';
-    sub = 'Изучите теорию и попробуйте снова.'; cls = 'grade-D'; color = '#ef4444';
-  }
-
-  circ.style.stroke = color;
-  setTimeout(() => { circ.style.strokeDashoffset = offset; }, 100);
-
-  document.getElementById('resultEmoji').textContent = emoji;
-  document.getElementById('resultTitle').textContent = title;
-  document.getElementById('resultSub').textContent = sub;
-  const gb = document.getElementById('gradeBadge');
-  gb.textContent = grade;
-  gb.className = 'grade-badge ' + cls;
-}
-
-function goHome() {
-  document.getElementById('totalQ').textContent = ALL_QUESTIONS.length;
-  showScreen('welcome');
-}
-
-// init
-document.getElementById('totalQ').textContent = ALL_QUESTIONS.length;
-document.getElementById('circleFg').style.strokeDasharray = 2 * Math.PI * 70;
-document.getElementById('circleFg').style.strokeDashoffset = 2 * Math.PI * 70;
+renderQuestions();
+renderPractice();
 </script>
+
 </body>
 </html>
