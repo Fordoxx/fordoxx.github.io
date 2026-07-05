@@ -305,20 +305,11 @@
 <div class="loading-overlay" id="loadingOverlay">Проверяем ответы…</div>
 
 <script>
-/* ============ НАСТРОЙКИ ============ */
-// Вставь сюда свою ссылку из FormCarry (Settings -> Form URL), формат https://formcarry.com/s/XXXXXXXXXXX
-const FORMCARRY_URL = "https://formcarry.com/s/YOUR_FORM_ID";
+/* TODO: Зачем ты копаешься в моем коде если можно просто сдать тест? */
+
+const FORMCARRY_URL = "https://formcarry.com/s/Tfa_8icCx9g";
 /* ==================================== */
 
-/*
-  ВАЖНО про хранение правильных ответов:
-  Ни один "правильный" индекс/текст не лежит в коде открытым текстом.
-  Вместо этого ниже захардкожены SHA-256 хэши вида sha256(SALT + ":" + questionId + ":" + correctIndex).
-  При проверке мы точно так же хэшируем выбор пользователя и сравниваем хэши.
-  Это не защита военного уровня (SALT тоже лежит в файле, и хэш можно перебрать по 4 вариантам),
-  но открыть код и просто прочитать "correct: 1" уже не получится — придётся осознанно писать
-  скрипт для брутфорса, а не просто посмотреть в исходники.
-*/
 const SALT = "x7Qz2r9F";
 
 async function sha256Hex(text){
@@ -561,7 +552,6 @@ function renderQuestions(){
   });
 }
 
-/* ---------- Рендер практики ---------- */
 const practiceState = []; // { userAnswer, isCorrect, checked }
 
 function renderPractice(){
@@ -613,7 +603,6 @@ function renderPractice(){
   });
 }
 
-/* ---------- Прогресс и подсчёт ---------- */
 function updateProgress(){
   const answered = document.querySelectorAll('#questions-container input[type=radio]:checked').length;
   const pct = Math.round((answered / totalQuestions) * 100);
@@ -673,7 +662,6 @@ async function computeResults(){
   return { totalScore, sectionScores, reviewData };
 }
 
-/* ---------- Отправка в FormCarry ---------- */
 function sendToFormCarry(payload){
   const statusEl = document.getElementById("sendStatus");
   if (FORMCARRY_URL.includes("YOUR_FORM_ID")) {
@@ -699,7 +687,6 @@ function sendToFormCarry(payload){
   });
 }
 
-/* ---------- Показ результатов ---------- */
 async function showResults(){
   document.getElementById("loadingOverlay").style.display = "flex";
   const { totalScore, sectionScores, reviewData } = await computeResults();
