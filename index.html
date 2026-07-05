@@ -305,15 +305,26 @@
 <div class="loading-overlay" id="loadingOverlay">Проверяем ответы…</div>
 
 <script>
-const FORMCARRY_URL = "https://formcarry.com/s/Tfa_8icCx9g";
-/* TODO: Зачем ты копаешься в моем коде если можно просто сдать тест? */
+/* ============ НАСТРОЙКИ ============ */
+// Вставь сюда свою ссылку из FormCarry (Settings -> Form URL), формат https://formcarry.com/s/XXXXXXXXXXX
+const FORMCARRY_URL = "https://formcarry.com/s/YOUR_FORM_ID";
+/* ==================================== */
 
+/*
+  ВАЖНО про хранение правильных ответов:
+  Ни один "правильный" индекс/текст не лежит в коде открытым текстом.
+  Вместо этого ниже захардкожены SHA-256 хэши вида sha256(SALT + ":" + questionId + ":" + correctIndex).
+  При проверке мы точно так же хэшируем выбор пользователя и сравниваем хэши.
+  Это не защита военного уровня (SALT тоже лежит в файле, и хэш можно перебрать по 4 вариантам),
+  но открыть код и просто прочитать "correct: 1" уже не получится — придётся осознанно писать
+  скрипт для брутфорса, а не просто посмотреть в исходники.
+*/
 const SALT = "x7Qz2r9F";
 
 async function sha256Hex(text){
   const enc = new TextEncoder().encode(text);
   const buf = await crypto.subtle.digest("SHA-256", enc);
-  return Array.from(new Uint8Array(buf)).map(b => b.toString(16)).join("");
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
 }
 
 const sections = [
@@ -403,24 +414,25 @@ const sections = [
   }
 ];
 
-const P1_HASHES = {
-  "groupby": "4c54836931482b2d3897516fdc57e6ed4292f086133022d8273a04acfbe9be40",
-  "mean": "08da345dab5df3acc089095d3e2513846729830a33969eeee0b80c548482a363",
-  "bar": "7a0582658bbe415cb702ca55c25aebd0c54d6836b38b64d2b174245e5fb84138",
-  "plot": "0df8e3100f906c0913a5180787a2c76332128535ae9a8f925745d138a4560b66"
-};
-
+// Практика: асинхронная проверка через хэши, без хранения "сырого" ответа в коде.
+// Тексты в поле answer — это ПОЯСНЕНИЕ, которое показывается уже ПОСЛЕ проверки,
+// само сравнение с вводом пользователя идёт по хэшам.
 const P2_HASHES = [
   "c75faa5f0e7f80c0c12f590d16327e2d4a21e9b51fe05bf11372cc67968b7792",
   "e621d87f6e15d5f379852de0c3b30fc9235f3aae267252ab0676bdd93e32c79f",
   "4780a8d94c942d400119a00753601841864413cc49387503550e99630e90b0ae",
   "b4da5025da78f9e58acbfd9d06653c22d13db6709987932f687747bbac539b2a"
 ];
-
 const P3_HASHES = [
   "67ecc44a3863a3061d954fc9f91d658f3fbf3e5c8232d4eda77cdb13a320fe9c",
   "72decdb99928fa07915b19b0603779dc2d5ad8af20f02913b7aa838c585d903d"
 ];
+const P1_HASHES = {
+  groupby: "4c54836931482b2d3897516fdc57e6ed4292f086133022d8273a04acfbe9be40",
+  mean:    "08da345dab5df3acc089095d3e2513846729830a33969eeee0b80c548482a363",
+  bar:     "7a0582658bbe415cb702ca55c25aebd0c54d6836b38b64d2b174245e5fb84138",
+  plot:    "0df8e3100f906c0913a5180787a2c76332128535ae9a8f925745d138a4560b66"
+};
 
 const practice = [
   {
@@ -469,8 +481,9 @@ let globalIndex = 0;
 const questionRefs = [];
 let studentName = "";
 
-let violationCount = 0;
-let cheatedCount = 0;
+/* ---------- Трекинг переключений вкладки (тихо) ---------- */
+let violationCount = 0; // ушёл со вкладки
+let cheatedCount = 0;   // вернулся на вкладку
 let testStarted = false;
 
 document.addEventListener("visibilitychange", () => {
@@ -482,6 +495,7 @@ document.addEventListener("visibilitychange", () => {
   }
 });
 
+/* ---------- Стартовый экран ---------- */
 document.getElementById("startBtn").addEventListener("click", startTest);
 document.getElementById("studentName").addEventListener("keydown", (e) => {
   if (e.key === "Enter") startTest();
@@ -504,6 +518,7 @@ function startTest(){
   window.scrollTo({ top: 0 });
 }
 
+/* ---------- Рендер вопросов ---------- */
 function renderQuestions(){
   const container = document.getElementById("questions-container");
   sections.forEach(sec => {
@@ -546,6 +561,7 @@ function renderQuestions(){
   });
 }
 
+/* ---------- Рендер практики ---------- */
 const practiceState = []; // { userAnswer, isCorrect, checked }
 
 function renderPractice(){
@@ -597,6 +613,7 @@ function renderPractice(){
   });
 }
 
+/* ---------- Прогресс и подсчёт ---------- */
 function updateProgress(){
   const answered = document.querySelectorAll('#questions-container input[type=radio]:checked').length;
   const pct = Math.round((answered / totalQuestions) * 100);
@@ -656,11 +673,12 @@ async function computeResults(){
   return { totalScore, sectionScores, reviewData };
 }
 
+/* ---------- Отправка в FormCarry ---------- */
 function sendToFormCarry(payload){
   const statusEl = document.getElementById("sendStatus");
   if (FORMCARRY_URL.includes("YOUR_FORM_ID")) {
     statusEl.textContent = "";
-    return;
+    return; // ссылка не настроена — тихо пропускаем отправку
   }
 
   const fd = new FormData();
